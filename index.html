@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TriniTing</title>
+<link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+  <main>
+<h1>Welcome to TriniTing!</h1>
+<p>Test your knowledge of Trinidad and Tobago's rich culture. Select a category and start the game!</p>
+
+<!-- User Info -->
+<label for="playerName">Enter your name:</label>
+<input type="text" id="playerName" placeholder="Your name"> <br>
+
+<!-- Category Selection -->
+<label for="category">Choose a category:</label>
+<select id="category">
+  <option value="food">Food</option>
+  <option value="famous">Famous Persons</option>
+  <option value="geography">Geography</option>
+  <option value="celebrations">Celebrations</option>
+</select>
+<button id="startGame">Start Game</button> <br><br>
+
+<!-- Game Board -->
+
+<div id="gameArea" class="hidden">
+  <div id="displayArea"></div>
+  <input type="text" id="answer" placeholder="Enter your answer">
+  <button id="submitAnswer">Submit</button>
+  <p id="score">Score: 0</p>
+  <button id="exitGame" class="hidden">Exit Game</button>
+</div>
+
+  </main>
+<script src="scripts/script.js"></script>
+</body>
+</html>
