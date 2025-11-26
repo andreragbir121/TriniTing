@@ -1,4 +1,3 @@
-
 const categories = {
     food: [
         {question: "What popular street food is made with curried chickpeas?", answer: "doubles", points: 10},
@@ -32,27 +31,23 @@ let score = 0;
 let wrongStreak = 0;
 
 let timer;
-let timeLeft = 15; // seconds per question
+let timeLeft = 18;
 
 const startBtn = document.getElementById("startGame");
 const gameArea = document.getElementById("gameArea");
 const displayArea = document.getElementById("displayArea");
 const answerInput = document.getElementById("answer");
 const submitBtn = document.getElementById("submitAnswer");
-const scoreEl = document.getElementById("score");
+const scoreElement = document.getElementById("score");
 const exitBtn = document.getElementById("exitGame");
-
-// Create timer display
-const timerEl = document.createElement("p");
-timerEl.id = "timer";
-gameArea.insertBefore(timerEl, scoreEl);
+const timerElement = document.getElementById("timer");
 
 startBtn.addEventListener("click", () => {
     const playerName = document.getElementById("playerName").value.trim();
     const category = document.getElementById("category").value;
 
     if (!playerName) {
-        alert("Please enter your name!");
+        alert("Please enter your name");
         return;
     }
 
@@ -63,17 +58,22 @@ startBtn.addEventListener("click", () => {
 
     gameArea.classList.remove("hidden");
     exitBtn.classList.remove("hidden");
+    answerInput.style.display = "inline";
+    submitBtn.style.display = "inline";
+    timerElement.style.display = "block";
+
+    scoreElement.textContent = `Score: ${score}`;
     showQuestion();
 });
 
 function startTimer() {
     clearInterval(timer);
-    timeLeft = 15;
-    timerEl.textContent = `Time left: ${timeLeft}s`;
+    timeLeft = 10;
+    timerElement.textContent = `Time left: ${timeLeft}s`;
 
     timer = setInterval(() => {
         timeLeft--;
-        timerEl.textContent = `Time left: ${timeLeft}s`;
+        timerElement.textContent = `Time left: ${timeLeft}s`;
 
         if (timeLeft <= 0) {
             clearInterval(timer);
@@ -84,10 +84,10 @@ function startTimer() {
 
 function handleTimeout() {
     wrongStreak++;
-    alert(`⏰ Time's up! Correct answer was: ${currentCategory[currentIndex].answer}`);
+    alert(`Times up.  The correct answer was: ${currentCategory[currentIndex].answer}`);
 
     if (wrongStreak >= 3) {
-        endGame(`Game Over! You answered 3 wrong in a row. Final Score: ${score}`);
+        endGame(`Game Over ${document.getElementById("playerName").value} You answered 3 wrong in a row. Your Final Score is: ${score}`);
         return;
     }
 
@@ -99,76 +99,47 @@ function showQuestion() {
     if (currentIndex < currentCategory.length) {
         displayArea.textContent = currentCategory[currentIndex].question;
         answerInput.value = "";
-        startTimer(); // Start timer for each question
+        startTimer();
     } else {
         clearInterval(timer);
-        endGame(`Congratulations! You completed the category! Final Score: ${score}`);
+        endGame(`Congratulations ${document.getElementById("playerName").value}, You completed the ${document.getElementById("category").value} category Your Final Score is: ${score}`);
     }
 }
 
 submitBtn.addEventListener("click", () => {
-    clearInterval(timer); // Stop timer when answer submitted
+    clearInterval(timer);
     const userAnswer = answerInput.value.trim().toLowerCase();
     const correctAnswer = currentCategory[currentIndex].answer;
 
     if (userAnswer === correctAnswer) {
         score += currentCategory[currentIndex].points;
         wrongStreak = 0;
-        alert("✅ Correct!");
+        alert ("Nice!, That answer was Correct");
     } else {
         wrongStreak++;
-        alert(`Wrong! Correct answer was: ${correctAnswer}`);
+        alert(`Thats Wroong, The Correct answer was: ${correctAnswer}`);
 
         if (wrongStreak >= 3) {
-            endGame(`Game Over! You answered 3 wrong in a row. Final Score: ${score}`);
+            endGame(`Game Over ${document.getElementById("playerName").value}, You answered 3 questions wrong. Your Final Score is: ${score}`);
             return;
         }
     }
-
-    scoreEl.textContent = `Score: ${score}`;
+    
+    scoreElement.textContent = `Score: ${score}`;
     currentIndex++;
     showQuestion();
 });
 
-// Exit button logic
+// Exit button
 exitBtn.addEventListener("click", () => {
     clearInterval(timer);
-    endGame(`You exited the game. Final Score: ${score}`);
+    endGame(` Thank you for playing ${document.getElementById("playerName").value}. You have exited the game. Your Final Score is: ${score}`);
 });
 
 function endGame(message) {
     displayArea.textContent = message;
     answerInput.style.display = "none";
     submitBtn.style.display = "none";
-    timerEl.style.display = "none";
-    exitBtn.style.display = "none";
-    addPlayAgainButton();
-}
-
-function addPlayAgainButton() {
-    const playAgainBtn = document.createElement("button");
-    playAgainBtn.textContent = "Play Again";
-    playAgainBtn.id = "playAgain";
-    gameArea.appendChild(playAgainBtn);
-
-    playAgainBtn.addEventListener("click", () => {
-        // Reset UI
-        answerInput.style.display = "inline";
-        submitBtn.style.display = "inline";
-        timerEl.style.display = "block";
-        exitBtn.style.display = "inline";
-        playAgainBtn.remove();
-
-        // Reset game state
-        currentIndex = 0;
-        score = 0;
-        wrongStreak = 0;
-        scoreEl.textContent = `Score: ${score}`;
-
-        // Let user pick a new category
-        const category = document.getElementById("category").value;
-        currentCategory = categories[category];
-
-        showQuestion();
-    });
+    timerElement.style.display = "none";
+    exitBtn.classList.add("hidden");
 }
